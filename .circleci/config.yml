@@ -1,0 +1,46 @@
+version: 2.1
+orbs:
+  heroku: circleci/heroku@1.2.5
+jobs:
+  build-job:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:12.18.2
+    steps:
+      - checkout
+      - run: 
+          name: Install dependencies
+          command: npm install
+      - run: 
+          name: Build
+          command: npm run build
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: lint
+          command: npm run lint
+    
+
+  deploy-job:
+    working_directory: ~/repo
+    docker: 
+      - image: circleci/node:12.18.2
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - heroku/deploy-via-git
+
+    workflows:
+        version: 2.1
+        deploy:
+          jobs:
+            - build-job
+            - deploy-job:
+                requires:
+                  - build-job
+                filters:
+                  branches:
+                    only: master
