@@ -156,6 +156,7 @@ import axios from "axios";
                   title: "Something went wrong!",
                   text: error.response.data,
           });
+            this.getAllUsers();
               });
 
        }
