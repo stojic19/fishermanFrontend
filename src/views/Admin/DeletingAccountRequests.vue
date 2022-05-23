@@ -185,7 +185,17 @@ import axios from "axios";
                       this.getAllRequests();
                     return response;
                      
-                   })
+                   }).catch(error => {
+                 console.log(error)
+                   this.$swal.fire({
+                  icon: "error",
+                  title: "Something went wrong!",
+                  text: error.response.data,
+          });
+                 this.loader.hide();
+                 this.loader=null
+                 this.getAllRequests();
+              });
 
 
        },
@@ -213,13 +223,22 @@ import axios from "axios";
                          )
                           this.loader.hide();
                           this.loader=null
-                           this.getAllRequests();
-
-                       
+                           this.getAllRequests
 
                         return response
                      
-                   })
+                   })  .catch(error => {
+                 console.log(error)
+                   this.$swal.fire({
+                  icon: "error",
+                  title: "Something went wrong!",
+                  text: error.response.data,
+          });
+                 this.loader.hide();
+                          this.loader=null
+              });
+
+                    
 
 
        }

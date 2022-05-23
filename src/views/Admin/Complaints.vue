@@ -140,6 +140,7 @@ import axios from 'axios'
                    console.log("AAAA"+this.comment)
                     axios.post(process.env.VUE_APP_BACKEND_URL+"complaint/sendMailAboutComplaint/"+ this.complaintId,this.comment)
             .then(response => {
+              console.log(response)
                  this.$swal.fire({
                                           position: 'top-end',
                                           icon: 'success',
@@ -149,16 +150,28 @@ import axios from 'axios'
                                        })
                                          this.loader.hide();
                                          this.loader=null
+                                         this.comment = ""
                                          this.getAllComplaints();
 
               
               
-                return response;
+               
               })
-             .catch(error => {
-                 this.errorMessage = error.message;
-                 console.error("There was an error!", error);
-           });
+            .catch(error => {
+                 console.log(error)
+                   this.$swal.fire({
+                  icon: "error",
+                  title: "Something went wrong!",
+                  text:" Complaint has already been reviewed!",
+          });
+                  this.loader.hide();
+                  this.loader=null
+                  this.comment = ""
+                  this.getAllComplaints();
+
+              });
+
+
         }
      
      },
