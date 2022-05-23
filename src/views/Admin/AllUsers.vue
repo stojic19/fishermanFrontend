@@ -151,15 +151,13 @@ import axios from "axios";
                })
                .catch(error => {
                  console.log(error)
-                  this.$swal.fire({
-                      position: 'top-end',
-                      icon: 'error',
-                      title: 'User has future reservations!',
-                      showConfirmButton: false,
-                      timer: 2500
-           })
+                   this.$swal.fire({
+                  icon: "error",
+                  title: "Something went wrong!",
+                  text: error.response.data,
+          });
               });
-               
+
        }
 
       
