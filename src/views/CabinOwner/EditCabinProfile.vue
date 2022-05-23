@@ -325,9 +325,21 @@
                      if(response.data == true){
                       axios.post(process.env.VUE_APP_BACKEND_URL+"cabins/delete",this.cabinDto)
                       .then(response => {
+                          this.$swal.fire({
+                              icon: "success",
+                              title: "This cabin has been deleted!",
+                              text: response.data,
+                       });
                             this.$router.push('/cabinOwnerHome/'+ this.email);
                             return response;
-                      })
+                      }).catch(error => {
+                            console.log(error)
+                              this.$swal.fire({
+                              icon: "error",
+                              title: "Something went wrong!",
+                              text: "You can't delete this cabin because reservations exists!",
+                       });
+                        })
                      }else{
                            this.$swal.fire({
                             position: 'top-end',
@@ -371,7 +383,14 @@
 
                                 }
                                 return response;
-                             })
+                             }).catch(error => {
+                            console.log(error)
+                              this.$swal.fire({
+                              icon: "error",
+                              title: "Something went wrong!",
+                              text: "You can't edit this cabin because reservations exists!",
+                       });
+                        })
 
                      }else{
                            this.$swal.fire({

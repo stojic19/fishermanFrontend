@@ -395,9 +395,21 @@
                      if(response.data == true){
                      axios.post(process.env.VUE_APP_BACKEND_URL+"boats/delete",this.boatDto)
                       .then(response => {
+                          this.$swal.fire({
+                              icon: "success",
+                              title: "This boat has been deleted!",
+                              text: response.data,
+                       });
                             this.$router.push('/boatOwnerHome/'+ this.email);
                             return response;
-                      })
+                      }).catch(error => {
+                            console.log(error)
+                              this.$swal.fire({
+                              icon: "error",
+                              title: "Something went wrong!",
+                              text: "You can't delete this boat because reservations exists!",
+                       });
+                        })
                      }else{
                            this.$swal.fire({
                             position: 'top-end',
@@ -452,6 +464,13 @@
                                 this.$router.push('/boatProfile/'+ this.email+'/'+this.boatName);
                               }
                               return response;
+                        }).catch(error => {
+                            console.log(error)
+                              this.$swal.fire({
+                              icon: "error",
+                              title: "Something went wrong!",
+                              text: "You can't edit this boat because reservations exists!",
+                       });
                         })
 
                      }else{

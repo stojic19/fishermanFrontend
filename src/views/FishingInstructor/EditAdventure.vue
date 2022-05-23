@@ -413,10 +413,22 @@ import FishingInstructorNavbar from './FishingInstructorNav.vue'
                      if(response.data == true){
                          axios.post(process.env.VUE_APP_BACKEND_URL+"adventures/deleteAdventure",this.adventureDto)
                         .then(response => {
+                           this.$swal.fire({
+                              icon: "success",
+                              title: "This adventure has been deleted!",
+                              text: response.data,
+                       });
                           this.$router.push('/fishingInstructorHome/'+ this.email);
                           return response   
 
-                        });   
+                        }).catch(error => {
+                            console.log(error)
+                              this.$swal.fire({
+                              icon: "error",
+                              title: "Something went wrong!",
+                              text: "You can't delete this adventure because reservations exists!",
+                       });
+                        })
                      } else{
                            this.$swal.fire({
                             position: 'top-end',
