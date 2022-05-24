@@ -228,7 +228,7 @@ export default {
       this.$router.push("/subscriptions/" + this.email);
     },
     viewProfile: function () {
-      window.location.replace('http://localhost:8080/client/viewProfile/' + this.email + "/" + this.email);
+      window.location.replace(process.env.VUE_APP_BACKEND_URL+ 'client/viewProfile/' + this.email + "/" + this.email);
     },
   },
 };
