@@ -404,7 +404,7 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
                    });
                           axios.post(process.env.VUE_APP_BACKEND_URL+"boats/save",this.boatDto)
                           .then(response => {
-                                  
+                                    this.loader.hide();
                                     this.saveImages()
                                     
                                  

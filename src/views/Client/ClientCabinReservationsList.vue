@@ -119,7 +119,7 @@
               <div style="width: 100%; height: 95%" class="card">
                 <img
                   style="width: 100%; height: 100%"
-                  :src="require('@/assets/' + getImageUrl(index))"
+                  :src="getImageUrl(index)"
                 />
 
                 <div class="card-body">
@@ -590,6 +590,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import VueModality from "vue-modality-v3";
 import Datepicker from "vue3-date-time-picker";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default {
   components: {
@@ -648,6 +649,7 @@ export default {
       endDate: null,
       sortBy: "",
       sortDirection: "asc",
+      entityImages: [],
     };
   },
   mounted() {
@@ -659,6 +661,31 @@ export default {
     }
   },
   methods: {
+    getImageUrl: function (index) {
+      if (this.reservationsLoaded == true) {
+        var imageForReturn = require("@/assets/logoF1.png");
+        this.entityImages.forEach((image) => {
+          if (image.fileName === this.sortedReservations[index].images[0].url) {
+            imageForReturn = image.image;
+          }
+        });
+        return imageForReturn;
+      }
+      return require("@/assets/logoF1.png");
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then((img) => {
+            // use Vue.set for reactivity
+            this.entityImages.push({ fileName: fileName, image: img });
+          })
+          .catch((err) => console.log(err));
+      });
+    },
     getPriceBeforeDiscount: function (quickReservationDto) {
       return (
         (quickReservationDto.paymentInformationDto.totalPrice *
@@ -709,6 +736,11 @@ export default {
               response.data
             );
             this.reservationsLoaded = true;
+            var imageNames = [];
+            response.data.forEach((dto) => {
+              imageNames.push(dto.cabinDto.images[0].url);
+            });
+            this.getImages(imageNames);
           });
         axios
           .post(
@@ -723,6 +755,11 @@ export default {
               response.data
             );
             this.reservationsLoaded = true;
+            var imageNames = [];
+            response.data.forEach((dto) => {
+              imageNames.push(dto.cabinDto.images[0].url);
+            });
+            this.getImages(imageNames);
           });
       } else {
         this.user.username = this.email;
@@ -739,6 +776,11 @@ export default {
               response.data
             );
             this.reservationsLoaded = true;
+            var imageNames = [];
+            response.data.forEach((dto) => {
+              imageNames.push(dto.cabinDto.images[0].url);
+            });
+            this.getImages(imageNames);
           });
         axios
           .post(
@@ -753,6 +795,11 @@ export default {
               response.data
             );
             this.reservationsLoaded = true;
+            var imageNames = [];
+            response.data.forEach((dto) => {
+              imageNames.push(dto.cabinDto.images[0].url);
+            });
+            this.getImages(imageNames);
           });
       }
     },
@@ -766,6 +813,11 @@ export default {
         .then((response) => {
           this.cabinReservationDtos = response.data;
           this.reservationsLoaded = true;
+          var imageNames = [];
+            response.data.forEach((dto) => {
+              imageNames.push(dto.cabinDto.images[0].url);
+            });
+            this.getImages(imageNames);
         });
     },
     formatDate(formatDate) {
@@ -783,12 +835,6 @@ export default {
         parseInt(splits[3]),
         parseInt(splits[4])
       );
-    },
-    getImageUrl: function (index) {
-      if (this.reservationsLoaded == true) {
-        return this.sortedReservations[index].cabinDto.images[0].url;
-      }
-      return "logoF1.png";
     },
     getFullAddress: function (index) {
       if (this.reservationsLoaded == true)

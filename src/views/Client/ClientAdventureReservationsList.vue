@@ -18,9 +18,15 @@
       </h1>
     </form>
     <!--header-->
-    
+
     <!-- sort -->
-    <template v-if="!upcomingReservations && !availableQuickReservations && adventureReservationDtos.length!=0">
+    <template
+      v-if="
+        !upcomingReservations &&
+        !availableQuickReservations &&
+        adventureReservationDtos.length != 0
+      "
+    >
       <hr />
       <form>
         <h1 style="text-align: left; color: #0b477b; padding-left: 7.2%">
@@ -72,9 +78,8 @@
         </div>
       </form>
     </template>
-      <!--sort-->
+    <!--sort-->
   </div>
-
 
   <hr />
 
@@ -114,7 +119,7 @@
               <div style="width: 100%; height: 95%" class="card">
                 <img
                   style="width: 100%; height: 100%"
-                  :src="require('@/assets/' + getImageUrl(index))"
+                  :src="getImageUrl(index)"
                 />
 
                 <div class="card-body">
@@ -285,27 +290,36 @@
                             'text-align: left;',
                           ]"
                         >
-                          <template v-if="availableQuickReservations || (!availableQuickReservations && !adventureReservationDto.discount)">
-                          {{
-                            twoDecimales(
-                              adventureReservationDto.paymentInformationDto
-                                .totalPrice
-                            )
-                          }}$
-                          </template>
-                          <template v-if="!availableQuickReservations && adventureReservationDto.discount">
+                          <template
+                            v-if="
+                              availableQuickReservations ||
+                              (!availableQuickReservations &&
+                                !adventureReservationDto.discount)
+                            "
+                          >
                             {{
-                            twoDecimales(
-                              getPriceBeforeDiscount(adventureReservationDto)
-                            )
-                          }}$
+                              twoDecimales(
+                                adventureReservationDto.paymentInformationDto
+                                  .totalPrice
+                              )
+                            }}$
+                          </template>
+                          <template
+                            v-if="
+                              !availableQuickReservations &&
+                              adventureReservationDto.discount
+                            "
+                          >
+                            {{
+                              twoDecimales(
+                                getPriceBeforeDiscount(adventureReservationDto)
+                              )
+                            }}$
                           </template>
                         </h6>
                       </div>
                     </div>
-                    <template
-                      v-if="availableQuickReservations"
-                    >
+                    <template v-if="availableQuickReservations">
                       <div class="row">
                         <div class="col">
                           <h6 style="text-align: left; color: green">
@@ -339,7 +353,8 @@
                       </div>
                     </template>
                     <template
-                      v-if="!availableQuickReservations &&
+                      v-if="
+                        !availableQuickReservations &&
                         adventureReservationDto.discount
                       "
                     >
@@ -366,7 +381,8 @@
                             <b
                               >{{
                                 twoDecimales(
-                                  adventureReservationDto.paymentInformationDto.totalPrice
+                                  adventureReservationDto.paymentInformationDto
+                                    .totalPrice
                                 )
                               }}
                               $</b
@@ -399,7 +415,7 @@
                             :disabled="
                               !possibleCancellation(
                                 adventureReservationDto.startDate
-                              ) 
+                              )
                             "
                           >
                             CANCEL
@@ -696,6 +712,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import VueModality from "vue-modality-v3";
 import Datepicker from "vue3-date-time-picker";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default {
   components: {
@@ -753,6 +770,7 @@ export default {
       endDate: null,
       sortBy: "",
       sortDirection: "asc",
+      entityImages: [],
     };
   },
   mounted() {
@@ -764,6 +782,31 @@ export default {
     }
   },
   methods: {
+    getImageUrl: function (index) {
+      if (this.reservationsLoaded == true) {
+        var imageForReturn = require("@/assets/logoF1.png");
+        this.entityImages.forEach((image) => {
+          if (image.fileName === this.sortedReservations[index].images[0].url) {
+            imageForReturn = image.image;
+          }
+        });
+        return imageForReturn;
+      }
+      return require("@/assets/logoF1.png");
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then((img) => {
+            // use Vue.set for reactivity
+            this.entityImages.push({ fileName: fileName, image: img });
+          })
+          .catch((err) => console.log(err));
+      });
+    },
     getPriceBeforeDiscount: function (quickReservationDto) {
       return (
         (quickReservationDto.paymentInformationDto.totalPrice *
@@ -803,7 +846,8 @@ export default {
       if (!this.upcomingReservations) {
         axios
           .post(
-            process.env.VUE_APP_BACKEND_URL+"reservationAdventure/getReservationsHistory",
+            process.env.VUE_APP_BACKEND_URL +
+              "reservationAdventure/getReservationsHistory",
             {
               username: this.email,
             },
@@ -813,10 +857,17 @@ export default {
             this.adventureReservationDtos =
               this.adventureReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
+            if(response.data.length!=0)
+            var imageNames = [];
+            response.data.forEach((dto) => {
+              imageNames.push(dto.adventureDto.images[0].url);
+            });
+            this.getImages(imageNames);
           });
         axios
           .post(
-            process.env.VUE_APP_BACKEND_URL+"quickReservationAdventure/getReservationsHistory",
+            process.env.VUE_APP_BACKEND_URL +
+              "quickReservationAdventure/getReservationsHistory",
             {
               username: this.email,
             },
@@ -826,12 +877,18 @@ export default {
             this.adventureReservationDtos =
               this.adventureReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
+            var imageNames = [];
+            response.data.forEach((dto) => {
+              imageNames.push(dto.adventureDto.images[0].url);
+            });
+            this.getImages(imageNames);
           });
       } else {
         this.user.username = this.email;
         axios
           .post(
-            process.env.VUE_APP_BACKEND_URL+"reservationAdventure/getUpcomingReservations",
+            process.env.VUE_APP_BACKEND_URL +
+              "reservationAdventure/getUpcomingReservations",
             {
               username: this.email,
             },
@@ -841,10 +898,16 @@ export default {
             this.adventureReservationDtos =
               this.adventureReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
+            var imageNames = [];
+            response.data.forEach((dto) => {
+              imageNames.push(dto.adventureDto.images[0].url);
+            });
+            this.getImages(imageNames);
           });
         axios
           .post(
-            process.env.VUE_APP_BACKEND_URL+"quickReservationAdventure/getUpcomingReservations",
+            process.env.VUE_APP_BACKEND_URL +
+              "quickReservationAdventure/getUpcomingReservations",
             {
               username: this.email,
             },
@@ -854,19 +917,30 @@ export default {
             this.adventureReservationDtos =
               this.adventureReservationDtos.concat(response.data);
             this.reservationsLoaded = true;
+            var imageNames = [];
+            response.data.forEach((dto) => {
+              imageNames.push(dto.adventureDto.images[0].url);
+            });
+            this.getImages(imageNames);
           });
       }
     },
     getAvailableQuickReservations: function () {
       axios
         .get(
-          process.env.VUE_APP_BACKEND_URL+"quickReservationAdventure/getAvailableReservations",
+          process.env.VUE_APP_BACKEND_URL +
+            "quickReservationAdventure/getAvailableReservations",
           {},
           {}
         )
         .then((response) => {
           this.adventureReservationDtos = response.data;
           this.reservationsLoaded = true;
+          var imageNames = [];
+          response.data.forEach((dto) => {
+            imageNames.push(dto.adventureDto.images[0].url);
+          });
+          this.getImages(imageNames);
         });
     },
     formatDate(formatDate) {
@@ -884,12 +958,6 @@ export default {
         parseInt(splits[3]),
         parseInt(splits[4])
       );
-    },
-    getImageUrl: function (index) {
-      if (this.reservationsLoaded == true) {
-        return this.sortedReservations[index].adventureDto.images[0].url;
-      }
-      return "logoF1.png";
     },
     getFullAddress: function (index) {
       if (this.reservationsLoaded == true)
@@ -916,14 +984,18 @@ export default {
       this.$router.push("/adventureProfile/" + this.email + "/" + boatId);
     },
     evaluateReservation: function (reservationDto) {
-      if(reservationDto.discount)
+      if (reservationDto.discount)
         this.$router.push(
-        "/quickEvaluation/" + this.email + "/" + "adventure/" + reservationDto.id
-      );
+          "/quickEvaluation/" +
+            this.email +
+            "/" +
+            "adventure/" +
+            reservationDto.id
+        );
       else
-      this.$router.push(
-        "/evaluation/" + this.email + "/" + "adventure/" + reservationDto.id
-      );
+        this.$router.push(
+          "/evaluation/" + this.email + "/" + "adventure/" + reservationDto.id
+        );
     },
     writeComplaint: function (reservationDto) {
       this.$router.push(
@@ -952,7 +1024,8 @@ export default {
       this.quickReservationAdventure.clientUsername = this.email;
       axios
         .post(
-          process.env.VUE_APP_BACKEND_URL+"quickReservationAdventure/makeQuickReservation",
+          process.env.VUE_APP_BACKEND_URL +
+            "quickReservationAdventure/makeQuickReservation",
           this.quickReservationAdventure,
           {}
         )
@@ -987,7 +1060,7 @@ export default {
         onCancel: this.onCancel,
       });
       var path = "reservationAdventure";
-      if(this.adventureForCancellation.discount)
+      if (this.adventureForCancellation.discount)
         path = "quickReservationAdventure";
 
       axios

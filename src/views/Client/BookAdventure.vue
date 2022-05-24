@@ -45,7 +45,7 @@
           <div class="carousel-inner">
             <div class="carousel-item active">
               <img
-                :src="require('@/assets/' + currentImageUrl)"
+                :src="getImageUrl(currentImageUrl)"
                 class="d-block w-100"
                 alt="..."
               />
@@ -107,7 +107,7 @@
                   d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
                 />
               </svg>
-              {{ adventureDto.insturctorRating }}</span
+              {{ adventureDto.instructorRating }}</span
             >
           </div>
           <div class="col">
@@ -563,6 +563,7 @@ import axios from "axios";
 import OpenLayersMap from "../../components/OpenLayersMap.vue";
 import Datepicker from "vue3-date-time-picker";
 import dayjs from "dayjs";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default {
   props: {
@@ -641,6 +642,7 @@ export default {
       totalPrice: 0,
       adventureIdParam: "",
       comments: [],
+      entityImages: [],
     };
   },
   mounted() {
@@ -653,6 +655,30 @@ export default {
     if (this.bookingProcess) this.calculatePrice();
   },
   methods: {
+    getImageUrl: function (name) {
+      if (this.adventureLoaded == true) {
+        var imageForReturn = require("@/assets/logoF1.png");
+        this.entityImages.forEach((image) => {
+          if (image.fileName === name) {
+            imageForReturn = image.image;
+          }
+        });
+        return imageForReturn;
+      }
+      return require("@/assets/logoF1.png");
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then(img => {
+            // use Vue.set for reactivity
+            this.entityImages.push({ fileName : fileName, image : img })
+          }).catch((err)=> console.log(err));
+      })
+    },
     setAndFormatDate: function (newDate) {
       var date = new Date();
       var splits = newDate.toString().split(",");
@@ -752,6 +778,12 @@ export default {
           this.addedAdditionalServices = [];
           this.adventureDto = response.data;
           this.adventureLoaded = true;
+          var imageNames = [];
+          this.adventureDto.images.forEach((image) => {
+            imageNames.push(image.url);
+          });
+          this.getImages(imageNames);
+
           this.currentImageUrl = this.adventureDto.images[0].url;
           this.maxImageIndex = this.adventureDto.images.length - 1;
           this.availableAdditionalServices =

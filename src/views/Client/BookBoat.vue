@@ -43,7 +43,7 @@
           <div class="carousel-inner">
             <div class="carousel-item active">
               <img
-                :src="require('@/assets/' + currentImageUrl)"
+                :src="getImageUrl(currentImageUrl)"
                 class="d-block w-100"
                 alt="..."
               />
@@ -575,6 +575,7 @@ import axios from "axios";
 import OpenLayersMap from "../../components/OpenLayersMap";
 import Datepicker from "vue3-date-time-picker";
 import dayjs from "dayjs";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default {
   props: {
@@ -666,6 +667,7 @@ export default {
       totalPrice: 0,
       boatIdParam: "",
       comments: [],
+      entityImages: [],
     };
   },
   mounted() {
@@ -681,6 +683,30 @@ export default {
       }
   },
   methods: {
+    getImageUrl: function (name) {
+      if (this.boatLoaded == true) {
+        var imageForReturn = require("@/assets/logoF1.png");
+        this.entityImages.forEach((image) => {
+          if (image.fileName === name) {
+            imageForReturn = image.image;
+          }
+        });
+        return imageForReturn;
+      }
+      return require("@/assets/logoF1.png");
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then(img => {
+            // use Vue.set for reactivity
+            this.entityImages.push({ fileName : fileName, image : img })
+          }).catch((err)=> console.log(err));
+      })
+    },
      needsCaptainServices: function(){
       var needsCaptainServices = false;
       this.addedAdditionalServices.forEach((service)=>{
@@ -800,6 +826,13 @@ export default {
           this.addedAdditionalServices = [];
           this.boatDto = response.data;
           this.boatLoaded = true;
+
+          var imageNames = [];
+          this.boatDto.images.forEach((image) => {
+            imageNames.push(image.url);
+          });
+          this.getImages(imageNames);
+
           this.currentImageUrl = this.boatDto.images[0].url;
           this.maxImageIndex = this.boatDto.images.length - 1;
           this.availableAdditionalServices = this.boatDto.additionalServices;

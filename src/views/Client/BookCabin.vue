@@ -43,7 +43,7 @@
           <div class="carousel-inner">
             <div class="carousel-item active">
               <img
-                :src="require('@/assets/' + currentImageUrl)"
+                :src="getImageUrl(currentImageUrl)"
                 class="d-block w-100"
                 alt="..."
               />
@@ -574,6 +574,7 @@ import axios from "axios";
 import OpenLayersMap from "../../components/OpenLayersMap.vue";
 import Datepicker from "vue3-date-time-picker";
 import dayjs from "dayjs";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default {
   props: {
@@ -650,6 +651,7 @@ export default {
       totalPrice: 0,
       cabinNameParam: "",
       comments: [],
+      entityImages: [],
     };
   },
   mounted() {
@@ -662,6 +664,30 @@ export default {
     if (this.bookingProcess) this.calculatePrice();
   },
   methods: {
+    getImageUrl: function (name) {
+      if (this.cabinLoaded == true) {
+        var imageForReturn = require("@/assets/logoF1.png");
+        this.entityImages.forEach((image) => {
+          if (image.fileName === name) {
+            imageForReturn = image.image;
+          }
+        });
+        return imageForReturn;
+      }
+      return require("@/assets/logoF1.png");
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then(img => {
+            // use Vue.set for reactivity
+            this.entityImages.push({ fileName : fileName, image : img })
+          }).catch((err)=> console.log(err));
+      })
+    },
     setAndFormatDate: function (newDate) {
       var date = new Date();
       var splits = newDate.toString().split(",");
@@ -759,6 +785,13 @@ export default {
           this.addedAdditionalServices = [];
           this.cabinDto = response.data;
           this.cabinLoaded = true;
+
+          var imageNames = [];
+          this.cabinDto.images.forEach((image) => {
+            imageNames.push(image.url);
+          });
+          this.getImages(imageNames);
+
           this.currentImageUrl = this.cabinDto.images[0].url;
           this.maxImageIndex = this.cabinDto.images.length - 1;
           this.availableAdditionalServices = this.cabinDto.additionalServices;

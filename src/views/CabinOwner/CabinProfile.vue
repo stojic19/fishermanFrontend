@@ -20,7 +20,7 @@
          </div>
         <div class="carousel-inner">
                  <div class="carousel-item active">
-                 <img :src="require('@/assets/' + currentImageUrl)" class="d-block w-100" alt="...">
+                 <img :src="getImageUrl(currentImageUrl)" class="d-block w-100" alt="...">
                 </div>
         </div>
         <button @click="previousImage()" class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -183,6 +183,8 @@
    import OpenLayersMap from '../../components/OpenLayersMap.vue'
    import CabinOwnerNavBar from './CabinOwnerNav.vue'
    import dayjs from 'dayjs';
+   import { getStorage, ref, getDownloadURL } from "firebase/storage";
+
    export default{
      components: {
        CabinOwnerNavBar,
@@ -233,9 +235,7 @@
          maxImageIndex: 0,
          role: '',
          comments: [],
-         
-
-
+         entityImages: [],
        }
      },
      mounted() {
@@ -243,9 +243,32 @@
        this.email = this.$route.params.email
        this.cabinName= this.$route.params.cabinName
        this.getCabin()
-
      },
      methods: {
+       getImageUrl: function (name) {
+      if (this.cabinLoaded == true) {
+        var imageForReturn = require("@/assets/logoF1.png");
+        this.entityImages.forEach((image) => {
+          if (image.fileName === name) {
+            imageForReturn = image.image;
+          }
+        });
+        return imageForReturn;
+      }
+      return require("@/assets/logoF1.png");
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then(img => {
+            // use Vue.set for reactivity
+            this.entityImages.push({ fileName : fileName, image : img })
+          }).catch((err)=> console.log(err));
+      })
+    },
        editProfile: function(){
         this.$router.push('/editCabinProfile/'+ this.email+'/'+this.cabinName);
        },
@@ -260,6 +283,13 @@
                         this.cabinDto=response.data
                          console.log("cancellling   "+this.cabinDto.cancellingConditions)
                         this.cabinLoaded=true;
+
+                        var imageNames = [];
+                        this.cabinDto.images.forEach((image) => {
+                          imageNames.push(image.url);
+                        });
+                        this.getImages(imageNames);
+
                         this.currentImageUrl=this.cabinDto.images[0].url
                         this.maxImageIndex=this.cabinDto.images.length-1
                         this.getComments()

@@ -546,7 +546,7 @@
                 <div style="width: 100%; height: 95%" class="card">
                   <img
                     style="width: 100%; height: 100%"
-                    :src="require('@/assets/' + getImageUrl(index))"
+                    :src="getImageUrl(index)"
                   />
 
                   <div class="card-body">
@@ -679,6 +679,7 @@ import Datepicker from "vue3-date-time-picker";
 import PickLocationMap from "../../components/PickLocationMap";
 import dayjs from "dayjs";
 import Multiselect from "@vueform/multiselect";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default {
   components: {
@@ -778,6 +779,7 @@ export default {
       freeEquipment: [],
       filterAdditionalServicesOptions: [],
       searchName: "",
+      entityImages: [],
     };
   },
   mounted() {
@@ -790,6 +792,30 @@ export default {
     this.getAdventures();
   },
   methods: {
+    getImageUrl: function (index) {
+      if (this.adventureLoaded == true) {
+        var imageForReturn = require("@/assets/logoF1.png");
+        this.entityImages.forEach((image) => {
+          if (image.fileName === this.sortedAdventures[index].images[0].url) {
+            imageForReturn = image.image;
+          }
+        });
+        return imageForReturn;
+      }
+      return require("@/assets/logoF1.png");
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then(img => {
+            // use Vue.set for reactivity
+            this.entityImages.push({ fileName : fileName, image : img })
+          }).catch((err)=> console.log(err));
+      })
+    },
     filterList: function (adventureDtos) {
       var adventures = [];
       adventureDtos.forEach((adventureDto) => {
@@ -1122,15 +1148,14 @@ export default {
           .then((response) => {
             this.adventureDtos = response.data;
             this.adventureLoaded = true;
+            var imageNames = [];
+            this.adventureDtos.forEach((dto) => {
+              imageNames.push(dto.images[0].url);
+            });
+            this.getImages(imageNames);
             if(!this.unidentifiedUser) this.fillRulesAndFreeEquipment(response.data);
           });
       }
-    },
-    getImageUrl: function (index) {
-      if (this.adventureLoaded == true) {
-        return this.sortedAdventures[index].images[0].url;
-      }
-      return "logoF1.png";
     },
     getFullAddress: function (index) {
       if (this.adventureLoaded == true)

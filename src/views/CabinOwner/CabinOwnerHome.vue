@@ -122,7 +122,7 @@
                 <div style="width: 100%; height: 95%" class="card">
                   <img
                     style="width: 100%; height: 100%"
-                    :src="require('@/assets/' + getImageUrl(index))"
+                    :src="getImageUrl(index)"
                   />
 
                   <div class="card-body">
@@ -204,6 +204,8 @@
 <script>
 import axios from "axios";
 import CabinOwnerNav from './CabinOwnerNav.vue'
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+
 export default {
   components: {
     CabinOwnerNav
@@ -255,8 +257,7 @@ export default {
       searchPrice: "",
       searchCity: "",
       searchCountry: "",
-      
-
+      entityImages: [],
     };
   },
   mounted() {
@@ -272,13 +273,36 @@ export default {
         .then((response) => {
           this.cabinDtos = response.data;
           this.cabinsLoaded = true;
+          var imageNames = [];
+          this.cabinDtos.forEach((dto) => {
+            imageNames.push(dto.images[0].url);
+          });
+          this.getImages(imageNames);
         });
     },
     getImageUrl: function (index) {
       if (this.cabinsLoaded == true) {
-        return this.filteredCabins[index].images[0].url;
+        var imageForReturn = require("@/assets/logoF1.png");
+        this.entityImages.forEach((image) => {
+          if (image.fileName === this.filteredCabins[index].images[0].url) {
+            imageForReturn = image.image;
+          }
+        });
+        return imageForReturn;
       }
-      return "logoF1.png";
+      return require("@/assets/logoF1.png");
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then(img => {
+            // use Vue.set for reactivity
+            this.entityImages.push({ fileName : fileName, image : img })
+          }).catch((err)=> console.log(err));
+      })
     },
     getFullAddress: function (index) {
       if (this.cabinsLoaded == true)

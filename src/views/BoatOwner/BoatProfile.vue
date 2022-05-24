@@ -23,7 +23,7 @@
                 </div>
                 <div  class="carousel-inner">
                         <div class="carousel-item active">
-                        <img :src="require('@/assets/' + currentImageUrl)" class="d-block w-100" alt="...">
+                        <img :src="getImageUrl(currentImageUrl)" class="d-block w-100" alt="...">
                         </div>
                 </div>
                 <button @click="previousImage()" class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -180,6 +180,7 @@
   import OpenLayersMap from '../../components/OpenLayersMap'
   import axios from "axios";
   import dayjs from 'dayjs';
+  import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
    export default{
     components: {
@@ -242,8 +243,8 @@
            currentImageUrl: 'logoF1.png',
            imageIndex: 0,
            maxImageIndex: 0,
-           comments: []
-
+           comments: [],
+           entityImages: [],
        }
 
      },
@@ -253,6 +254,30 @@
        this.getBoat()
      },
      methods: {
+       getImageUrl: function (name) {
+      if (this.boatLoaded == true) {
+        var imageForReturn = require("@/assets/logoF1.png");
+        this.entityImages.forEach((image) => {
+          if (image.fileName === name) {
+            imageForReturn = image.image;
+          }
+        });
+        return imageForReturn;
+      }
+      return require("@/assets/logoF1.png");
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then(img => {
+            // use Vue.set for reactivity
+            this.entityImages.push({ fileName : fileName, image : img })
+          }).catch((err)=> console.log(err));
+      })
+    },
        getBoat: function(){
                   this.boatDto.name=this.boatName
                   this.boatDto.ownersUsername=this.email
@@ -262,7 +287,13 @@
                         this.boatLoaded=true;
                         this.currentImageUrl=this.boatDto.images[0].url
                         this.maxImageIndex=this.boatDto.images.length-1
-                        
+
+                        var imageNames = [];
+                        this.boatDto.images.forEach((image) => {
+                          imageNames.push(image.url);
+                        });
+                        this.getImages(imageNames);
+
                         console.log("image url "+this.currentImageUrl)
                         console.log("max index"+ this.boatDto.images.length)
                         this.getComments()

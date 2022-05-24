@@ -574,7 +574,7 @@
               <div style="width: 100%; height: 95%" class="card">
                 <img
                   style="width: 100%; height: 100%"
-                  :src="require('@/assets/' + getImageUrl(index))"
+                  :src="getImageUrl(index)"
                 />
 
                 <div class="card-body">
@@ -700,6 +700,7 @@ import Datepicker from "vue3-date-time-picker";
 import PickLocationMap from "../../components/PickLocationMap";
 import dayjs from "dayjs";
 import Multiselect from "@vueform/multiselect";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default {
   components: {
@@ -793,6 +794,7 @@ export default {
       filterAdditionalServicesOptions: [],
       searchName: "",
       searchType: "",
+      entityImages: [],
     };
   },
   mounted() {
@@ -805,6 +807,30 @@ export default {
     this.getBoats();
   },
   methods: {
+    getImageUrl: function (index) {
+      if (this.boatsLoaded == true) {
+        var imageForReturn = require("@/assets/logoF1.png");
+        this.entityImages.forEach((image) => {
+          if (image.fileName === this.sortedBoats[index].images[0].url) {
+            imageForReturn = image.image;
+          }
+        });
+        return imageForReturn;
+      }
+      return require("@/assets/logoF1.png");
+    },
+    getImages: function (imageNames) {
+      const storage = getStorage();
+      imageNames.forEach((fileName) => {
+        getDownloadURL(
+          ref(storage, "gs://isafisherman-94973.appspot.com/" + fileName)
+        )
+          .then(img => {
+            // use Vue.set for reactivity
+            this.entityImages.push({ fileName : fileName, image : img })
+          }).catch((err)=> console.log(err));
+      })
+    },
     filterList: function(boatDtos){
       var boats = [];
       boatDtos.forEach((boatDto) => {
@@ -1122,21 +1148,25 @@ export default {
       if (this.reservationProcess) {
         this.boatDtos = this.availableBoats;
         this.boatsLoaded = true;
+        var imageNames = [];
+          this.boatDtos.forEach((dto) => {
+            imageNames.push(dto.images[0].url);
+          });
+          this.getImages(imageNames);
         this.fillRulesAndFreeEquipment(this.availableBoats);
       } else {
         this.user.username = this.email;
         axios.get(process.env.VUE_APP_BACKEND_URL+"boats/getAll").then((response) => {
           this.boatDtos = response.data;
           this.boatsLoaded = true;
+          var imageNames = [];
+          this.boatDtos.forEach((dto) => {
+            imageNames.push(dto.images[0].url);
+          });
+          this.getImages(imageNames);
           if(!this.unidentifiedUser) this.fillRulesAndFreeEquipment(response.data);
         });
       }
-    },
-    getImageUrl: function (index) {
-      if (this.boatsLoaded == true) {
-        return this.sortedBoats[index].images[0].url;
-      }
-      return "logoF1.png";
     },
     getFullAddress: function (index) {
       if (this.boatsLoaded == true)
