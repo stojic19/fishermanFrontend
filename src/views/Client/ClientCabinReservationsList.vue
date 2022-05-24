@@ -226,9 +226,7 @@
                     </h6>
                   </template>
                   <template
-                    v-if="
-                      availableQuickReservations || cabinReservationDto.discount
-                    "
+                    v-if="availableQuickReservations"
                   >
                     <h6 style="color: red; text-align: left">
                       Previous price:
@@ -254,6 +252,35 @@
                       >
                     </h6>
                   </template>
+                  <template
+                    v-if="
+                      !availableQuickReservations && cabinReservationDto.discount
+                    "
+                  >
+                    <h6 style="color: red; text-align: left">
+                      Previous price:
+                      <a style="text-decoration: line-through"
+                        >{{
+                          twoDecimales(
+                            getPriceBeforeDiscount(cabinReservationDto)
+                          )
+                        }}
+                        $
+                      </a>
+                    </h6>
+                    <h6 style="text-align: left; color: green">
+                      Discount: <i>-{{ cabinReservationDto.discount }}%</i>
+                    </h6>
+                    <h6 style="text-align: left; color: green">
+                      Discounted price:
+                      <b
+                        >{{
+                          twoDecimales(cabinReservationDto.paymentInformationDto.totalPrice)
+                        }}
+                        $</b
+                      >
+                    </h6>
+                  </template>
                   <div class="row">
                     <template v-if="!availableQuickReservations">
                       <div class="col" style="text-align: right">
@@ -274,7 +301,7 @@
                             :disabled="
                               !possibleCancellation(
                                 cabinReservationDto.startDate
-                              ) || cabinReservationDto.discount
+                              ) 
                             "
                           >
                             CANCEL
@@ -632,6 +659,13 @@ export default {
     }
   },
   methods: {
+    getPriceBeforeDiscount: function (quickReservationDto) {
+      return (
+        (quickReservationDto.paymentInformationDto.totalPrice *
+          (100 + quickReservationDto.discount)) /
+        100
+      );
+    },
     sort: function (s) {
       if (s === this.sortBy) {
         this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
@@ -781,6 +815,11 @@ export default {
       this.$router.push("/cabinProfile/" + this.email + "/" + cabinName);
     },
     evaluateReservation: function (reservationDto) {
+      if(reservationDto.discount)
+      this.$router.push(
+        "/quickEvaluation/" + this.email + "/" + "cabin/" + reservationDto.id
+      );
+      else
       this.$router.push(
         "/evaluation/" + this.email + "/" + "cabin/" + reservationDto.id
       );
@@ -846,9 +885,13 @@ export default {
         canCancel: true,
         onCancel: this.onCancel,
       });
+      var path = "reservationCabin";
+      if(this.cabinForCancellation.discount)
+        path = "quickReservationCabin";
+
       axios
         .post(
-          process.env.VUE_APP_BACKEND_URL+"reservationCabin/cancelReservation",
+          process.env.VUE_APP_BACKEND_URL + path + "/cancelReservation",
           this.cabinForCancellation,
           {}
         )
