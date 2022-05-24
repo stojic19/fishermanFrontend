@@ -144,7 +144,7 @@ import axios from 'axios'
                  this.$swal.fire({
                                           position: 'top-end',
                                           icon: 'success',
-                                          title: 'Email successfully send!',
+                                          title: 'Email successfully sent!',
                                           showConfirmButton: false,
                                            timer: 2500
                                        })

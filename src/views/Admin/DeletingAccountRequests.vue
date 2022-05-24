@@ -206,6 +206,7 @@ import axios from "axios";
              this.userRequest=user
        },
        acceptDelete: function(){
+         
             this.loader = this.$loading.show({
                     container: this.fullPage ? null : this.$refs.formContainer,
                     canCancel: true,
@@ -223,7 +224,7 @@ import axios from "axios";
                          )
                           this.loader.hide();
                           this.loader=null
-                           this.getAllRequests
+                           this.getAllRequests()
 
                         return response
                      
@@ -235,7 +236,8 @@ import axios from "axios";
                   text: error.response.data,
           });
                  this.loader.hide();
-                          this.loader=null
+                 this.loader=null
+                  this.getAllRequests()
               });
 
                     
