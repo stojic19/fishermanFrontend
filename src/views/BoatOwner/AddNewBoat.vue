@@ -374,7 +374,7 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
                 else if (flag && address.city) {
                     this.boatDto.addressDto.city = address.city;
                 }
-                else if (address.country) {
+                if (address.country) {
                     this.boatDto.addressDto.country = address.country;
                 }
                 this.boatDto.addressDto.streetAndNum= street + ' ' +number

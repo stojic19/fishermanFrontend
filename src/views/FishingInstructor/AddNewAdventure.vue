@@ -304,7 +304,7 @@
             var street
             var number
                 if (address) {
-    
+
                 if (address.road) {
                     street = address.road;
       
@@ -325,7 +325,7 @@
                 else if (flag && address.city) {
                     this.adventureDto.address.city = address.city;
                 }
-                else if (address.country) {
+                if (address.country) {
                     this.adventureDto.address.country = address.country;
                 }
                 this.adventureDto.address.streetAndNum= street + ' ' +number

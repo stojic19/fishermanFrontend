@@ -320,7 +320,7 @@
                 else if (flag && address.city) {
                     this.cabinDto.addressDto.city = address.city;
                 }
-                else if (address.country) {
+                if (address.country) {
                     this.cabinDto.addressDto.country = address.country;
                 }
                 this.cabinDto.addressDto.streetAndNum= street + ' ' +number
