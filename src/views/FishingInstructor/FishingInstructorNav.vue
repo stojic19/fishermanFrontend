@@ -95,7 +95,7 @@
          this.$router.push('/insctructorsBusinessReport/'+ this.$props.username); 
        },
        viewProfile: function(){
-          window.location.replace('http://localhost:8080/instructor/viewProfile/'+ this.$props.username + "/"+ this.$props.username);
+          this.$router.replace('/instructor/viewProfile/'+ this.$props.username + "/"+ this.$props.username);
        } 
 
     },

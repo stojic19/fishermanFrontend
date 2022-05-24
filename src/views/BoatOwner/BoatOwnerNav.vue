@@ -97,8 +97,7 @@ export default ({
           this.$router.push('/boatOwnerBusinessReport/'+ this.$props.username);
        },
        visitProfile: function(){
-          window.location.replace('http://localhost:8080/boatOwner/viewProfile/'+ this.$props.username + "/"+ this.$props.username);
-
+          this.$router.replace('/boatOwner/viewProfile/'+ this.$props.username + "/"+ this.$props.username);
        }  
     }
 })
