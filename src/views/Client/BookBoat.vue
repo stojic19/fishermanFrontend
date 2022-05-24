@@ -723,7 +723,7 @@ export default {
     },
     isOwnerAvailable: function (){
       axios
-        .post("http://localhost:8081/reservationBoat/isOwnerAvailable",{
+        .post(process.env.VUE_APP_BACKEND_URL + "reservationBoat/isOwnerAvailable",{
             boatId: this.boatId,
             startDate: this.formatDate(this.start),
             endDate: this.formatDate(this.end),
@@ -748,7 +748,7 @@ export default {
     },
     getComments: function () {
       axios
-        .get("http://localhost:8081/evaluations/boat/" + this.boatDto.id)
+        .get(process.env.VUE_APP_BACKEND_URL + "evaluations/boat/" + this.boatDto.id)
         .then((response) => {
           this.comments = response.data;
         });

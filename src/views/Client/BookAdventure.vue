@@ -696,7 +696,7 @@ export default {
     getComments: function () {
       axios
         .get(
-          "http://localhost:8081/evaluations/instructor/" +
+          process.env.VUE_APP_BACKEND_URL + "evaluations/instructor/" +
             this.adventureDto.fishingInstructorUsername +
             "/"
         )

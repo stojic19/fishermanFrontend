@@ -5,7 +5,7 @@
       style="background-color: #1d7ac9; list-style: none"
     >
       <div class="container-fluid" style="background-color: #1d7ac9">
-        <a class="navbar-brand" href="http://localhost:8080/">
+        <a class="navbar-brand" :href="origin">
           <img src="../../assets/logoF1.png" alt="" width="194" height="80" />
         </a>
       </div>
@@ -20,7 +20,7 @@
       <p class="lead">
         <a
           class="btn btn-primary btn-lg"
-          href="http://localhost:8080/login"
+          :href="origin + '/login'"
           role="button"
           >Go to login</a
         >
@@ -39,13 +39,15 @@ export default {
       activationDTO: {
         activationCode: "",
         email: "",
+        origin: ''
       },
     };
   },
   mounted() {
     this.activationDTO.activationCode = this.$route.params.activationCode;
     this.activationDTO.email = this.$route.params.email;
-    console.log(this.activationDTO);
+    this.origin = window.location.origin;
+    
     axios
       .post(
         process.env.VUE_APP_BACKEND_URL+"auth/clientAccountActivation",

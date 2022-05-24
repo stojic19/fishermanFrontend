@@ -705,7 +705,7 @@ export default {
     getComments: function () {
       axios
         .get(
-          "http://localhost:8081/cabinEvaluation/findByCabinId/" +
+          process.env.VUE_APP_BACKEND_URL + "cabinEvaluation/findByCabinId/" +
             this.cabinDto.id
         )
         .then((response) => {

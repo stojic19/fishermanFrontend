@@ -841,7 +841,7 @@ export default {
         return;
       }
       this.cabinsLoaded = false;
-      console.log("AAAAAAAAAAAAAAAAAAAAAAAAA"+process.env.VUE_APP_BACKEND_URL)
+
       axios
         .post(
           process.env.VUE_APP_BACKEND_URL+"reservationCabin/searchAvailableCabins",
