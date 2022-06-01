@@ -786,7 +786,7 @@ export default {
       if (this.reservationsLoaded == true) {
         var imageForReturn = require("@/assets/logoF1.png");
         this.entityImages.forEach((image) => {
-          if (image.fileName === this.sortedReservations[index].images[0].url) {
+          if (image.fileName === this.sortedReservations[index].adventureDto.images[0].url) {
             imageForReturn = image.image;
           }
         });

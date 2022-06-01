@@ -709,6 +709,7 @@ export default {
     },
      needsCaptainServices: function(){
       var needsCaptainServices = false;
+      if(this.addedAdditionalServices)
       this.addedAdditionalServices.forEach((service)=>{
         if(service.name === "Captain service") needsCaptainServices = true;
       });
