@@ -573,7 +573,7 @@
 <script>
 import axios from "axios";
 import OpenLayersMap from "../../components/OpenLayersMap";
-import Datepicker from "vue3-date-time-picker";
+import Datepicker from "@vuepic/vue-datepicker";
 import dayjs from "dayjs";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 

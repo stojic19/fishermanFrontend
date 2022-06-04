@@ -696,7 +696,7 @@
 <script>
 import axios from "axios";
 import BookBoat from "./BookBoat.vue";
-import Datepicker from "vue3-date-time-picker";
+import Datepicker from "@vuepic/vue-datepicker";
 import PickLocationMap from "../../components/PickLocationMap";
 import dayjs from "dayjs";
 import Multiselect from "@vueform/multiselect";

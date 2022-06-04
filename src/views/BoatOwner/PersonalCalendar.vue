@@ -232,9 +232,9 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import 'vue3-date-time-picker/dist/main.css';
+import '@vuepic/vue-datepicker/dist/main.css';
 //import dayjs from 'dayjs';
-import Datepicker from 'vue3-date-time-picker';
+import Datepicker from '@vuepic/vue-datepicker';
 import '@shapla/vue-modal/dist/style.css';
 import VueModality from 'vue-modality-v3'
 

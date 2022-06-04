@@ -16,8 +16,8 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import VueLoading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 //calendars
-import Datepicker from 'vue3-date-time-picker';
-import 'vue3-date-time-picker/dist/main.css';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 import VCalendar from 'v-calendar';
 
 import store from '../src/store/index'

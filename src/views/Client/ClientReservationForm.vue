@@ -145,7 +145,7 @@
 <script>
 import axios from "axios";
 import ClientNavbar from "./ClientNavbar";
-import Datepicker from "vue3-date-time-picker";
+import Datepicker from "@vuepic/vue-datepicker";
 import ClientCabins from "./ClientCabins.vue";
 import ClientBoats from "./ClientBoats.vue";
 import ClientAdventures from "./ClientAdventures.vue";

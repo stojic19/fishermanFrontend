@@ -667,7 +667,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import VueModality from "vue-modality-v3";
-import Datepicker from "vue3-date-time-picker";
+import Datepicker from "@vuepic/vue-datepicker";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 export default {
