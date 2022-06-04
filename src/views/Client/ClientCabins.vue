@@ -9,11 +9,11 @@
         <br />
         <div style="padding-left: 7.2%; width: 100%" class="row">
           <div class="col">
-            <Datepicker format="DD/MM/yyyy" v-model="start" placeholder="Start date"></Datepicker>
+            <Datepicker format="dd/MM/yyyy" v-model="start" placeholder="Start date"></Datepicker>
           </div>
 
           <div class="col">
-            <Datepicker format="DD/MM/yyyy" v-model="end" placeholder="End date"></Datepicker>
+            <Datepicker format="dd/MM/yyyy" v-model="end" placeholder="End date"></Datepicker>
           </div>
 
           <div class="col">
