@@ -376,7 +376,7 @@
             <p>Start</p>
           </div>
           <div class="col-sm-9" style="padding: 1%">
-            <Datepicker v-model="startDate" disabled> </Datepicker>
+            <Datepicker format="dd/MM/yyyy" v-model="startDate" disabled> </Datepicker>
           </div>
         </div>
         <br />
@@ -388,7 +388,7 @@
             <p>End</p>
           </div>
           <div class="col-sm-9" style="padding: 1%">
-            <Datepicker v-model="endDate" disabled></Datepicker>
+            <Datepicker format="dd/MM/yyyy" v-model="endDate" disabled></Datepicker>
           </div>
         </div>
         <div class="row">
@@ -464,7 +464,7 @@
             <p>Start</p>
           </div>
           <div class="col-sm-9" style="padding: 1%">
-            <Datepicker v-model="startDate" disabled> </Datepicker>
+            <Datepicker format="dd/MM/yyyy" v-model="startDate" disabled> </Datepicker>
           </div>
         </div>
         <br />
@@ -476,7 +476,7 @@
             <p>End</p>
           </div>
           <div class="col-sm-9" style="padding: 1%">
-            <Datepicker v-model="endDate" disabled></Datepicker>
+            <Datepicker format="dd/MM/yyyy" v-model="endDate" disabled></Datepicker>
           </div>
         </div>
         <div class="row">

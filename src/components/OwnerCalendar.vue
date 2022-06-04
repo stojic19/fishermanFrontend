@@ -14,7 +14,7 @@
             <h5>From</h5>
           </div>
           <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker   
+             <Datepicker format="dd/MM/yyyy"   
                 v-model="start" 
                 >
              </Datepicker>
@@ -25,7 +25,7 @@
             <h5>To</h5>
           </div>
           <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker v-model="end"></Datepicker>
+             <Datepicker format="dd/MM/yyyy" v-model="end"></Datepicker>
           </div>
         </div>
            &nbsp;
@@ -41,7 +41,7 @@
             <h5>From</h5>
           </div>
           <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker></Datepicker>
+             <Datepicker format="dd/MM/yyyy"></Datepicker>
           </div>
         </div>
         <div class="row">
@@ -49,7 +49,7 @@
             <h5>To</h5>
           </div>
           <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker></Datepicker>
+             <Datepicker format="dd/MM/yyyy"></Datepicker>
           </div>
         </div>
            &nbsp;
@@ -65,7 +65,7 @@
             <h6>From</h6>
           </div>
           <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker   
+             <Datepicker format="dd/MM/yyyy"   
            :minDate="start"
            :maxDate="end"
            v-model="start" 
@@ -79,7 +79,7 @@
             <h6>To</h6>
           </div>
           <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker   :minDate="start" :maxDate="end" v-model="end"></Datepicker>
+             <Datepicker format="dd/MM/yyyy"   :minDate="start" :maxDate="end" v-model="end"></Datepicker>
           </div>
         </div>
   <br>

@@ -23,7 +23,7 @@
                  <h5>From</h5>
                  </div>
                  <div class="col-sm-9" style="padding: 1%; padding-right: 2.5%;" >
-                 <Datepicker v-model="start"></Datepicker>
+                 <Datepicker format="dd/MM/yyyy" v-model="start"></Datepicker>
                 </div>
                 </div>
                 <div class="row">
@@ -31,7 +31,7 @@
                 <h5>To</h5>
                 </div>
                 <div class="col-sm-9" style="padding: 1%; padding-right: 2.5%;">
-                <Datepicker v-model="end" ></Datepicker>
+                <Datepicker format="dd/MM/yyyy" v-model="end" ></Datepicker>
                 </div>
                 </div>
                  &nbsp;

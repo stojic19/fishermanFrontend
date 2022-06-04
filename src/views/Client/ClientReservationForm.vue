@@ -30,11 +30,11 @@
                         </div>
                         <div class="row form-group">
                           <label id="label">Start</label>
-                          <Datepicker v-model="start" required></Datepicker>
+                          <Datepicker format="dd/MM/yyyy" v-model="start" required></Datepicker>
                         </div>
                         <div class="row form-group">
                           <label id="label">End</label>
-                          <Datepicker v-model="end" required></Datepicker>
+                          <Datepicker format="dd/MM/yyyy" v-model="end" required></Datepicker>
                         </div>
                       </div>
                     </div>

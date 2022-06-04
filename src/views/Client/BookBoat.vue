@@ -260,7 +260,7 @@
               <p>Start date:</p>
             </div>
             <div class="col">
-              <Datepicker
+              <Datepicker format="dd/MM/yyyy"
                 @closed="calculatePrice()"
                 v-model="start"
                 required
@@ -273,7 +273,7 @@
               <p>End date:</p>
             </div>
             <div class="col">
-              <Datepicker
+              <Datepicker format="dd/MM/yyyy"
                 @closed="calculatePrice()"
                 v-model="end"
                 required

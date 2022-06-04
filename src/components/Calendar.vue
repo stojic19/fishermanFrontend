@@ -14,7 +14,7 @@
             <h5>From</h5>
           </div>
           <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker   
+             <Datepicker format="dd/MM/yyyy"   
            
            v-model="start" 
                 
@@ -27,7 +27,7 @@
             <h5>To</h5>
           </div>
           <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker v-model="end"></Datepicker>
+             <Datepicker format="dd/MM/yyyy" v-model="end"></Datepicker>
           </div>
         </div>
            &nbsp;

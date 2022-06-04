@@ -16,7 +16,7 @@
             <h5>From</h5>
           </div>
           <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker   
+             <Datepicker format="dd/MM/yyyy"   
            
            v-model="start" 
                 
@@ -29,7 +29,7 @@
             <h5>To</h5>
           </div>
           <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker v-model="end"></Datepicker>
+             <Datepicker format="dd/MM/yyyy" v-model="end"></Datepicker>
           </div>
         </div>
            &nbsp;
@@ -60,7 +60,7 @@
             <h6>From</h6>
           </div>
           <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker   
+             <Datepicker format="dd/MM/yyyy"   
            v-model="startEdit" 
                 
          disabled >
@@ -72,7 +72,7 @@
             <h6>To</h6>
           </div>
           <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker  v-model="endEdit" disabled ></Datepicker>
+             <Datepicker format="dd/MM/yyyy"  v-model="endEdit" disabled ></Datepicker>
           </div>
         </div>
 
@@ -88,7 +88,7 @@
             <h6>From</h6>
           </div>
           <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker   
+             <Datepicker format="dd/MM/yyyy"   
            
            v-model="unavailableStart" 
                 
@@ -101,7 +101,7 @@
             <h6>To</h6>
           </div>
           <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker  v-model="unavailableEnd"></Datepicker>
+             <Datepicker format="dd/MM/yyyy"  v-model="unavailableEnd"></Datepicker>
           </div>
         </div>
         <div class="row">
@@ -132,7 +132,7 @@
             <p>Start</p>
           </div>
           <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker   
+             <Datepicker format="dd/MM/yyyy"   
            v-model="startInfo" 
                 
          disabled >
@@ -145,7 +145,7 @@
             <p>End</p>
           </div>
           <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker  v-model="endInfo" disabled></Datepicker>
+             <Datepicker format="dd/MM/yyyy"  v-model="endInfo" disabled></Datepicker>
           </div>
         </div>
         <div class="row">
@@ -213,7 +213,7 @@
             <p>Start</p>
           </div>
           <div class="col-sm-9" style="padding: 1%;" >
-             <Datepicker   
+             <Datepicker format="dd/MM/yyyy"   
            v-model="startQuickInfo" 
                 
          disabled >
@@ -226,7 +226,7 @@
             <p>End</p>
           </div>
           <div class="col-sm-9" style="padding: 1%;">
-             <Datepicker  v-model="endQuickInfo" disabled></Datepicker>
+             <Datepicker format="dd/MM/yyyy"  v-model="endQuickInfo" disabled></Datepicker>
           </div>
         </div>
         <div class="row">
@@ -333,7 +333,7 @@
             <h6 style="color: gray;">From</h6>
           </div>
           <div class="col-sm-9"  style="padding: 2.5%;">
-             <Datepicker  v-model="startQuickReservation" ></Datepicker>
+             <Datepicker format="dd/MM/yyyy"  v-model="startQuickReservation" ></Datepicker>
           </div>
         </div>
                <div class="row">
@@ -341,7 +341,7 @@
             <h6 style="color: gray;">To</h6>
           </div>
           <div class="col-sm-9"  style="padding: 2.5%;">
-             <Datepicker  v-model="endQuickReservation"></Datepicker>
+             <Datepicker format="dd/MM/yyyy"  v-model="endQuickReservation"></Datepicker>
           </div>
         </div>
 
@@ -430,7 +430,7 @@
             <h6 style="color: gray;">From</h6>
           </div>
           <div class="col-sm-9"  style="padding: 2.5%;">
-             <Datepicker  v-model="startReservation" ></Datepicker>
+             <Datepicker format="dd/MM/yyyy"  v-model="startReservation" ></Datepicker>
           </div>
         </div>
                <div class="row">
@@ -438,7 +438,7 @@
             <h6 style="color: gray;">To</h6>
           </div>
           <div class="col-sm-9"  style="padding: 2.5%;">
-             <Datepicker  v-model="endReservation"></Datepicker>
+             <Datepicker format="dd/MM/yyyy"  v-model="endReservation"></Datepicker>
           </div>
         </div>
 
