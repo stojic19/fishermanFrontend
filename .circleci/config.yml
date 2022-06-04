@@ -6,7 +6,7 @@ orbs:
 
 jobs:
   build-test-analyze:
-     working_directory: ~/Frontend
+     working_directory: ~/fishermanFrontend
      docker:
           - image: circleci/node:12.18.2
      steps:
