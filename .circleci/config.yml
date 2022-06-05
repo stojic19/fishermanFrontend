@@ -30,7 +30,7 @@ workflows:
       - build-test-analyze
       - heroku/deploy-via-git:
           name: deploy-frontend
-          app-name: rocky-ravine-63735
+          app-name: fisherman-booking
           filters:
             branches:
               only:
